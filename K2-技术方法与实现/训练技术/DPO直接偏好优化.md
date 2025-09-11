@@ -14,14 +14,14 @@ DPO（Direct Preference Optimization，直接偏好优化）是一种简化的AI
 
 ```mermaid
 flowchart TD
-    A[预训练[[Transformer]]模型] --> B[[[SFT]]监督微调]
+    A[预训练 Transformer 模型] --> B[监督微调 SFT]
     B --> C{对齐方法选择}
-    C --> D[[[RLHF人类反馈强化学习]]]
-    C --> E[DPO直接偏好优化]
+    C --> D[RLHF 人类反馈强化学习]
+    C --> E[DPO 直接偏好优化]
     
     D --> D1[复杂三阶段训练]
     D --> D2[需要奖励模型]
-    D --> D3[PPO强化学习]
+    D --> D3[PPO 强化学习]
     
     E --> E1[简化单阶段训练]
     E --> E2[直接优化偏好]
@@ -37,7 +37,7 @@ flowchart TD
 
 ### **问题背景**
 [[RLHF人类反馈强化学习]]存在的挑战：
-- **训练复杂**：需要三个阶段（SFT → 奖励模型 → PPO）
+- **训练复杂**：需要三个阶段（[[SFT（Supervised Fine-Tuning，监督微调）|SFT]] → [[K1-基础理论与概念/核心概念/奖励模型（Reward Model）|奖励模型]] → [[K2-技术方法与实现/训练技术/PPO（Proximal Policy Optimization，近端策略优化）|PPO]]）
 - **不稳定性**：强化学习固有的训练不稳定
 - **奖励Hacking**：模型可能学会欺骗奖励模型
 - **计算成本高**：需要维护多个模型

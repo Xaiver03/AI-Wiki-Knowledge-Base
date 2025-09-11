@@ -2,7 +2,7 @@
 
 🏷 #训练技术 #对齐 #强化学习 #进阶
 
-> **关联**：[[K1-基础理论与概念/核心概念/损失函数与训练调优术语名词库|术语名词库（大白话对照）]]
+> **关联**：[[SFT（Supervised Fine-Tuning，监督微调）|SFT]]、[[K1-基础理论与概念/核心概念/奖励模型（Reward Model）|奖励模型]]、[[K2-技术方法与实现/训练技术/PPO（Proximal Policy Optimization，近端策略优化）|PPO]]、[[K1-基础理论与概念/核心概念/损失函数与训练调优术语名词库|术语名词库（大白话对照）]]
 
 ---
 
@@ -27,6 +27,33 @@ flowchart LR
 
 ---
 
+## **🧭 整体流程一图（细化）**
+
+```mermaid
+flowchart TD
+    subgraph 数据阶段
+      D1[指令-回答数据] -->|SFT| SFT[监督微调模型]
+      D2[偏好数据
+         (prompt, y+ , y-)] --> RM[奖励模型训练]
+    end
+
+    subgraph 强化学习阶段
+      P0[策略= SFT模型] --> P1[生成回答]
+      P1 --> P2[奖励模型打分]
+      P2 --> P3[PPO更新策略]
+      P3 --> P4[新策略]
+    end
+
+    SFT -.参考模型.-> P0
+    P3 -.KL约束.-> SFT
+
+    style SFT fill:#DCF,stroke:#69C
+    style RM fill:#FCE,stroke:#E69
+    style P3 fill:#CFE,stroke:#6C9
+```
+
+---
+
 ## **⚙️ 技术原理**
 
 ### **1. 三阶段训练流程**
@@ -34,14 +61,14 @@ flowchart LR
 | **阶段** | **目标** | **数据需求** | **输出** |
 |----------|----------|--------------|----------|
 | **Stage 1: [[SFT]]** | 学习基本指令遵循 | 人工标注的指令-回答对 | 基础对话模型 |
-| **Stage 2: 奖励模型训练** | 学习人类偏好 | 人类偏好排序数据 | 奖励模型 |
-| **Stage 3: PPO强化学习** | 优化模型行为 | 奖励模型反馈 | 最终对齐模型 |
+| **Stage 2: [[K1-基础理论与概念/核心概念/奖励模型（Reward Model）|奖励模型]]训练** | 学习人类偏好 | 人类偏好排序数据 | 奖励模型 |
+| **Stage 3: [[K2-技术方法与实现/训练技术/PPO（Proximal Policy Optimization，近端策略优化）|PPO]]强化学习** | 优化模型行为 | 奖励模型反馈 | 最终对齐模型 |
 
 ### **2. 核心组件**
 
 - **Policy Model（策略模型）**：待优化的语言模型
-- **Reward Model（奖励模型）**：评估回答质量的评分模型
-- **PPO算法**：Proximal Policy Optimization，用于策略优化
+- **[[K1-基础理论与概念/核心概念/奖励模型（Reward Model）|Reward Model（奖励模型）]]**：评估回答质量的评分模型
+- **[[K2-技术方法与实现/训练技术/PPO（Proximal Policy Optimization，近端策略优化）|PPO算法]]**：用于策略优化
 
 ---
 
